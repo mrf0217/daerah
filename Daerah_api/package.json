@@ -1,0 +1,17 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "sequelize": "^6.37.0",
+    "mysql2": "^3.9.0"
+  },
+  "author": "",
+  "license": "ISC"
+  
+}
