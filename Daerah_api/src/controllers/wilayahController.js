@@ -3,7 +3,7 @@ const { Provinsi, Kabupaten } = require('../models/wilayahModel');
 
 exports.getAll = async (req, res) => {
   try {
-    const provinsi = await Provinsi.findAll(); // ❌ no include
+    const provinsi = await Provinsi.findAll({ include: Kabupaten });
     const kabupaten = await Kabupaten.findAll({ include: Provinsi });
 
     res.json({
@@ -22,7 +22,7 @@ exports.getAll = async (req, res) => {
 
 exports.getProvinsi = async (req, res) => {
   try {
-    const data = await Provinsi.findAll(); // ❌ no include
+    const data = await Provinsi.findAll({ include: Kabupaten });
     res.json({
       status: true,
       data,
@@ -39,7 +39,7 @@ exports.getProvinsi = async (req, res) => {
 
 exports.getKabupaten = async (req, res) => {
   try {
-    const data = await Kabupaten.findAll({ include: Provinsi }); // ✅ show parent provinsi
+    const data = await Kabupaten.findAll({ include: Provinsi });
     res.json({
       status: true,
       data,
@@ -58,7 +58,6 @@ exports.getByWilayah = async (req, res) => {
   try {
     const { wilayah } = req.params;
 
-    // ✅ provinsi with its kabupaten
     const provinsi = await Provinsi.findByPk(wilayah, { include: Kabupaten });
     if (provinsi) {
       return res.json({
@@ -68,7 +67,6 @@ exports.getByWilayah = async (req, res) => {
       });
     }
 
-    // ✅ kabupaten with its provinsi
     const kabupaten = await Kabupaten.findByPk(wilayah, { include: Provinsi });
     if (kabupaten) {
       return res.json({
