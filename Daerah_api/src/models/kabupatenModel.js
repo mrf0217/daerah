@@ -1,16 +1,11 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-
 module.exports = (sequelize, DataTypes) => {
-  class Kabupaten extends require('sequelize').Model {}
-  Kabupaten.init({
-    // attributes
-    name: DataTypes.STRING,
-    provinsiId: DataTypes.INTEGER,
+  const Kabupaten = sequelize.define('Kabupaten', {
+    wilayah: { type: DataTypes.INTEGER, primaryKey: true },
+    nama_kabupaten: { type: DataTypes.STRING, allowNull: false },
+    provinsi_wilayah: { type: DataTypes.INTEGER, allowNull: false }
   }, {
-    sequelize,
-    modelName: 'Kabupaten',
     tableName: 'kabupaten',
+    timestamps: false
   });
   return Kabupaten;
 };

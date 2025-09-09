@@ -1,16 +1,10 @@
-const { Model } = require('sequelize');
-const sequelize = require('../config/database');
-
 module.exports = (sequelize, DataTypes) => {
-  class Provinsi extends Model {}
-  Provinsi.init({
-    // define attributes here
-    name: DataTypes.STRING,
-    // add other fields
+  const Provinsi = sequelize.define('Provinsi', {
+    wilayah: { type: DataTypes.INTEGER, primaryKey: true },
+    nama_provinsi: { type: DataTypes.STRING, allowNull: false }
   }, {
-    sequelize,
-    modelName: 'Provinsi',
-    tableName: 'provinsi', // adjust as needed
+    tableName: 'provinsi',
+    timestamps: false
   });
   return Provinsi;
 };

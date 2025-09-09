@@ -3,10 +3,13 @@ const { Provinsi, Kabupaten } = require('../models');
 
 exports.getAll = async (req, res) => {
   try {
-    const provinsi = await Provinsi.findAll({ attributes: ['wilayah', 'nama_provinsi'] });
+    const provinsi = await Provinsi.findAll({ 
+      attributes: ['wilayah', 'nama_provinsi'] 
+    });
+    
     const kabupaten = await Kabupaten.findAll({ 
-    attributes: ['wilayah', 'nama_kabupaten', 'provinsi_wilayah'],
-    include: Provinsi 
+    attributes: ['wilayah', 'nama_kabupaten', ],
+    include: { model: Provinsi, attributes: ['wilayah', 'nama_provinsi']  }
     });
 
     res.json({
