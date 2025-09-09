@@ -3,9 +3,9 @@ const { Provinsi, Kabupaten } = require('../models');
 
 exports.getAll = async (req, res) => {
   try {
-    const provinsi = await Provinsi.findAll({ attributes: ['id', 'name'] }); 
+    const provinsi = await Provinsi.findAll({ attributes: ['wilayah', 'nama_provinsi'] });
     const kabupaten = await Kabupaten.findAll({ 
-    attributes: ['id', 'name'], 
+    attributes: ['wilayah', 'nama_kabupaten', 'provinsi_wilayah'],
     include: Provinsi 
     });
 
@@ -15,6 +15,7 @@ exports.getAll = async (req, res) => {
       message: "OK"
     });
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       status: false,
       data: [],

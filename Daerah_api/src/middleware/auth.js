@@ -1,6 +1,6 @@
 // src/middleware/auth.js
 const jwt = require('jsonwebtoken');
-const User = require('../models');
+const {User} = require('../models');
 const SECRET = process.env.JWT_SECRET;
 
 exports.verifyToken = async (req, res, next) => {
@@ -26,6 +26,7 @@ exports.verifyToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
+    console.log(err)
     return res.status(403).json({ status: false, data: [], message: "403 Forbidden - Token expired or invalid" });
   }
 };
