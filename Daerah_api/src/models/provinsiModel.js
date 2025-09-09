@@ -1,23 +1,16 @@
-const { DataTypes } = require('sequelize');
+const { Model } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Provinsi = sequelize.define('Provinsi', {
-  wilayah: {
-    type: DataTypes.STRING,
-    primaryKey: true
-  },
-  nama_provinsi: {
-    type: DataTypes.STRING,
-    allowNull: false
-  }
-}, {
-  tableName: 'provinsi',
-  timestamps: false
-});
-
-module.exports = Provinsi;
-const Kabupaten = require('./kabupatenModel');
-
-// Define relation
-Provinsi.hasMany(Kabupaten, { foreignKey: 'provinsi_wilayah' });
-Kabupaten.belongsTo(Provinsi, { foreignKey: 'provinsi_wilayah' });
+module.exports = (sequelize, DataTypes) => {
+  class Provinsi extends Model {}
+  Provinsi.init({
+    // define attributes here
+    name: DataTypes.STRING,
+    // add other fields
+  }, {
+    sequelize,
+    modelName: 'Provinsi',
+    tableName: 'provinsi', // adjust as needed
+  });
+  return Provinsi;
+};

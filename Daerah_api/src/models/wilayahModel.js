@@ -1,37 +1,58 @@
-const Provinsi = require('./provinsiModel');
-const Kabupaten = require('./kabupatenModel');
+// src/models/wilayahModel.js
+module.exports = (sequelize, DataTypes) => {
+  // Define models
+  const Provinsi = sequelize.define('Provinsi', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+  }, {
+    tableName: 'provinsi',
+    timestamps: false
+  });
 
-class Wilayah {
-  static async getAll() {
-    const provinsi = await Provinsi.findAll();
-    const kabupaten = await Kabupaten.findAll({ include: Provinsi });
-    return { provinsi, kabupaten };
-  }
+  const Kabupaten = sequelize.define('Kabupaten', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+    provinsi_wilayah: { type: DataTypes.INTEGER, allowNull: false }
+  }, {
+    tableName: 'kabupaten',
+    timestamps: false
+  });
 
-  static async getProvinsi() {
-    return await Provinsi.findAll();
-  }
+  // Define relationships
+  Provinsi.hasMany(Kabupaten, { foreignKey: 'provinsi_wilayah' });
+  Kabupaten.belongsTo(Provinsi, { foreignKey: 'provinsi_wilayah' });
 
-  static async getKabupaten() {
-    return await Kabupaten.findAll({ include: Provinsi });
-  }
-
-  static async getByWilayah(wilayah) {
-    // check provinsi
-    const prov = await Provinsi.findByPk(wilayah);
-    if (prov) {
-      const kab = await Kabupaten.findAll({ where: { provinsi_wilayah: wilayah } });
-      return { type: 'provinsi', data: prov, kabupaten: kab };
+  // Helper class
+  class Wilayah {
+    static async getAll() {
+      const provinsi = await Provinsi.findAll();
+      const kabupaten = await Kabupaten.findAll({ include: Provinsi });
+      return { provinsi, kabupaten };
     }
 
-    // check kabupaten
-    const kab = await Kabupaten.findByPk(wilayah, { include: Provinsi });
-    if (kab) {
-      return { type: 'kabupaten', data: kab };
+    static async getProvinsi() {
+      return await Provinsi.findAll();
     }
 
-    return null;
-  }
-}
+    static async getKabupaten() {
+      return await Kabupaten.findAll({ include: Provinsi });
+    }
 
-module.exports = { Provinsi, Kabupaten };
+    static async getByWilayah(id) {
+      const prov = await Provinsi.findByPk(id);
+      if (prov) {
+        const kab = await Kabupaten.findAll({ where: { provinsi_wilayah: id } });
+        return { type: 'provinsi', data: prov, kabupaten: kab };
+      }
+
+      const kab = await Kabupaten.findByPk(id, { include: Provinsi });
+      if (kab) {
+        return { type: 'kabupaten', data: kab };
+      }
+
+      return null;
+    }
+  }
+
+  return { Provinsi, Kabupaten, Wilayah };
+};
